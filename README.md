@@ -100,7 +100,7 @@ print(f"You rolled: {d20}")
 ```
 
 ### 4. Unique Sampling
-Selects $k$ unique elements from a population without replacement. It utilizes a partial shuffle algorithm ($O(k)$), making it far more memory-efficient than shuffling the entire population.
+Selects $k$ unique elements from a population without replacement. It utilizes a partial shuffle algorithm ($O$($k$)), making it far more memory-efficient than shuffling the entire population.
 
 ```python
 # Select 6 unique numbers from 1 to 60 (Lottery style)
@@ -128,3 +128,4 @@ api_key = chaos.token_hex(32)
 print(api_key)
 # Ex: f4a1d8b9e3...
 ```
+
