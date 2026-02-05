@@ -49,7 +49,8 @@ This allows the library to pick a random item from a dataset of millions of item
 | **Predictability** | High (Deterministic) | Low (Secure) | **Extremely Low (Multi-Source)** |
 | **Performance** | Fast | Slower | **Very Fast** |
 | **Memory Efficiency** | Low (Flattens lists) | Low (Flattens lists) | **High (Zero-Copy)** |
-| **Ideal Use Case** | Non-critical simulations | Passwords/Keys | **Production Games, Shuffling** |
+| **Ideal Use Case** | Non-critical simulations | Passwords/Keys | **Production Games, Shuffling, Data Sampling** |
+
 ---
 
 ## Installation
@@ -57,4 +58,73 @@ This allows the library to pick a random item from a dataset of millions of item
 Currently, Chaos Engine is distributed as a standalone module. Place the `chaos.py` file into your project directory.
 
 ```python
-from chaos import pick
+import chaos
+```
+---
+
+## Core Functions & Usage
+
+The library provides a complete suite of tools for secure randomization.
+
+### 1. The `pick()` Selector
+Polymorphic function that automatically detects the input type and applies the most efficient selection strategy.
+
+```python
+# Select from a list
+fruits = ["Apple", "Banana", "Grape", "Orange"]
+print(chaos.pick(fruits))
+
+# Select from a string
+print(chaos.pick("ABCDEF"))
+
+# Zero-Copy Matrix Selection (O(1) Memory)
+matrix = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+print(chaos.pick(matrix))
+```
+### 2. True Shuffling
+Performs an in-place Fisher-Yates shuffle using hardware entropy. Unlike random.shuffle, this cannot be reverse-engineered by predicting the seed.
+
+```python
+cards = ["Ace", "King", "Queen", "Jack", "10"]
+chaos.shuffle(cards)
+print(cards) 
+# Result: ["Queen", "10", "Ace", "Jack", "King"]
+```
+### 3. Secure Integers
+Generates a random integer $N$ such that $a \le N \le b$. It uses direct modular arithmetic to avoid the floating-point bias common in standard RNGs.
+
+```python
+# Rolling a D20 dice securely
+d20 = chaos.randint(1, 20)
+print(f"You rolled: {d20}")
+```
+
+### 4. Unique Sampling
+Selects $k$ unique elements from a population without replacement. It utilizes a partial shuffle algorithm ($O(k)$), making it far more memory-efficient than shuffling the entire population.
+
+```python
+# Select 6 unique numbers from 1 to 60 (Lottery style)
+numbers = list(range(1, 61))
+winners = chaos.sample(numbers, 6)
+print(winners)
+```
+
+### 5. High-Speed Boolean (Coin Flip)
+An ultra-optimized function that checks a single bit of entropy. It eliminates arithmetic operations, providing the fastest possible `True`/`False` decision mechanism for simulations.
+
+```python
+if chaos.coin():
+    print("Heads!")
+else:
+    print("Tails!")
+```
+
+### 6. Security Tokens
+Generates a cryptographically strong random hex string. It combines OS entropy with 9 other system noise sources ("Defense in Depth"), making it ideal for API keys and session tokens.
+
+```python
+# Generate a 32-byte (64 char) secure token
+api_key = chaos.token_hex(32)
+print(api_key)
+# Ex: f4a1d8b9e3...
+```
